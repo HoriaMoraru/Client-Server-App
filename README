@@ -1,0 +1,14 @@
+Client-Server Application with TCP and UDP
+
+Aceasta aplicatie Client-Server este dezvoltata utilizand protocoalele TCP si UDP pentru comunicatia dintre clienti si server. Aplicatia permite clientilor sa se conecteze si sa primeasca mesaje de la alte dispozitive, in functie de abonamentele pe care si le-au facut.
+
+Codul serverului este scris in C++ si foloseste urmatoarele biblioteci:
+
+"lib.h" : contine diverse functii ajutatoare pentru lucru cu socket-urile, pentru a face codul mai usor de citit si de scris;
+"unordered_map" : pentru stocarea datelor despre clienti, abonamente si mesaje;
+"vector" : pentru stocarea structurilor "pollfd", care sunt folosite pentru a urmari activitatile de pe fiecare socket.
+
+Cum functioneaza aplicatia
+Serverul utilizeaza un socket TCP pasiv pentru a asculta conexiuni de la clienti. In momentul in care un client se conecteaza la server, acesta trimite ID-ul clientului prin socket-ul TCP, astfel incat serverul sa poata tine evidenta clientilor conectati. Dupa aceea, serverul verifica daca clientul este unul nou sau unul vechi care incearca sa se reconecteze. Daca este un client nou, serverul il adauga la lista de clienti conectati si la structurile "pollfd". Daca este un client vechi, serverul actualizeaza socket-ul acestuia si ii trimite toate mesajele care erau stocate pentru el.
+
+Dupa ce clientul este conectat cu succes la server, acesta poate trimite mesaje catre server prin socket-ul TCP. Serverul primeste mesajul si il proceseaza, apoi trimite mesajul catre toti clientii conectati prin socket-ul UDP. Acest lucru se realizeaza prin intermediul structurii "pollfd" care retine toate socket-urile conectate si prin functia "poll" care monitorizeaza toate socket-urile pentru evenimente de citire sau scriere. Atunci cand serverul primeste un mesaj prin socket-ul TCP, acesta verifica structura "pollfd" pentru a identifica toate socket-urile conectate prin UDP si le trimite mesajul primit prin intermediul acestora.
